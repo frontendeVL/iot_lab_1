@@ -50,7 +50,7 @@ class _SmartLightingAppState extends State<SmartLightingApp> {
               Icon(
                 isLight ? Icons.wb_sunny : Icons.nightlight_round,
                 size: 100,
-                color: isLight ? Colors.orange : Colors.blueAccent,
+                color: isLight ? Colors.amber : Colors.blueAccent,
               ),
               const SizedBox(height: 20),
               Text(
