@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
+  // Параметри кнопки
   final String title;
   final VoidCallback onPressed;
 
@@ -23,9 +24,13 @@ class CustomButton extends StatelessWidget {
           ),
         ),
         onPressed: onPressed,
+        // Текст кнопки
         child: Text(
           title,
-          style: const TextStyle(color: Colors.white, fontSize: 18),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+          ),
         ),
       ),
     );
