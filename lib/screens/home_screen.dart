@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:my_project/services/mqtt_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,6 +16,41 @@ class _HomeScreenState extends State<HomeScreen> {
   String homeName = 'Smart Home Hub';
   // Контролер для поля введення назви
   final TextEditingController _nameController = TextEditingController();
+
+  // Нові змінні для роботи з датчиком температури
+  String _currentTemp = '--';
+  final MqttService _mqttService = MqttService();
+
+  @override
+  void initState() {
+    super.initState();
+    // Перевіряємо інтернет та налаштовуємо отримання даних з MQTT
+    _checkInitialConnection();
+    _setupMqtt();
+  }
+
+  // Функція для підключення до MQTT та оновлення температури
+  void _setupMqtt() async {
+    await _mqttService.connect((temp) {
+      if (!mounted) return;
+      setState(() {
+        _currentTemp = temp; 
+      });
+    });
+  }
+
+  // Перевіряємо чи є інтернет при завантаженні головного екрана
+  Future<void> _checkInitialConnection() async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (!mounted) return;
+    
+    // ignore: iterable_contains_unrelated_type
+    if (connectivityResult.contains(ConnectivityResult.none)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Увага: Немає підключення до мережі!')),
+      );
+    }
+  }
 
   // Функція для перемикання теми (світла/темна)
   void _changeTheme(String mode) {
@@ -63,6 +100,38 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
+            // Картка для відображення температури в реальному часі через MQTT
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.orangeAccent.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.orangeAccent.withOpacity(0.5)),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Living Room Temp', 
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text('MQTT Sensor Live', 
+                        style: TextStyle(fontSize: 12, color: Colors.grey)),
+                    ],
+                  ),
+                  Text(
+                    '$_currentTemp°C', 
+                    style: const TextStyle(
+                      fontSize: 30, 
+                      fontWeight: FontWeight.bold, 
+                      color: Colors.orange),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+
             // Поле для введення нової назви будинку
             TextField(
               controller: _nameController,
