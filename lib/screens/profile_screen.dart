@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:my_project/models/user_model.dart';
 import 'package:my_project/repositories/auth_repository.dart';
 import 'package:my_project/widgets/custom_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -32,9 +34,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   // ФУНКЦІЯ ДІАЛОГУ ВИХОДУ (Вимога лаби)
   void _confirmLogout() {
-    showDialog(
+    showDialog<void>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (BuildContext context) => AlertDialog(
         title: const Text('Вихід з акаунту'),
         content: const Text('Ви точно хочете вийти?'),
         actions: [
@@ -51,10 +53,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               if (!mounted) return;
               
-              // Повертаємося на екран логіну і видаляємо історію переходів
-              Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+              if (mounted) {
+                // ignore: use_build_context_synchronously
+                final nav = Navigator.of(context);
+                nav.pushNamedAndRemoveUntil(
+                  '/',
+                  (route) => false,
+                );
+              }
             },
-            child: const Text('Так, вийти', style: TextStyle(color: Colors.red)),
+            child: const Text(
+              'Так, вийти',
+              style: TextStyle(color: Colors.red),
+            ),
           ),
         ],
       ),

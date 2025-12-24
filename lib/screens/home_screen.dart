@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:my_project/services/mqtt_service.dart';
+import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,25 +17,13 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _nameController = TextEditingController();
 
   // Нові змінні для роботи з датчиком температури
-  String _currentTemp = '--';
-  final MqttService _mqttService = MqttService();
+  final String _currentTemp = '--';
 
   @override
   void initState() {
     super.initState();
-    // Перевіряємо інтернет та налаштовуємо отримання даних з MQTT
+    // Перевіряємо інтернет при завантаженні
     _checkInitialConnection();
-    _setupMqtt();
-  }
-
-  // Функція для підключення до MQTT та оновлення температури
-  void _setupMqtt() async {
-    await _mqttService.connect((temp) {
-      if (!mounted) return;
-      setState(() {
-        _currentTemp = temp; 
-      });
-    });
   }
 
   // Перевіряємо чи є інтернет при завантаженні головного екрана
@@ -104,9 +91,11 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.orangeAccent.withOpacity(0.15),
+                color: Colors.orangeAccent.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.orangeAccent.withOpacity(0.5)),
+                border: Border.all(
+                  color: Colors.orangeAccent.withValues(alpha: 0.5),
+                ),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

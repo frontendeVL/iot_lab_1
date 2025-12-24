@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:my_project/screens/home_screen.dart';
 import 'package:my_project/screens/login_screen.dart';
 import 'package:my_project/screens/profile_screen.dart';
 import 'package:my_project/screens/register_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   // Це обов'язково для async main
@@ -22,7 +22,7 @@ void main() async {
 class SmartHomeApp extends StatelessWidget {
   final String initialRoute;
   
-  const SmartHomeApp({super.key, required this.initialRoute});
+  const SmartHomeApp({required this.initialRoute, super.key});
 
   @override
   Widget build(BuildContext context) {
