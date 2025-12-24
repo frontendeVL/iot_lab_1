@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:my_project/repositories/auth_repository.dart';
 import 'package:my_project/widgets/custom_button.dart';
 import 'package:my_project/widgets/custom_textfield.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -44,6 +45,12 @@ class _LoginScreenState extends State<LoginScreen> {
     if (savedUser != null &&
         savedUser.email == inputEmail &&
         savedUser.password == inputPass) {
+      // Зберігаю простий токен (опція з вимог)
+      final prefs = await SharedPreferences.getInstance();
+      final tokenValue = 'fake_token_${DateTime.now().millisecondsSinceEpoch}';
+      await prefs.setString('token', tokenValue);
+
+      if (!mounted) return;
       // Якщо все ок — йдемо додому
       Navigator.pushReplacementNamed(context, '/home');
     } else {
